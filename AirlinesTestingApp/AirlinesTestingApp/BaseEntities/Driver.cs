@@ -20,6 +20,8 @@ namespace AirlinesTestingApp.BaseEntities
             {
                 new Driver();
             }
+
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(15);
             return driver;
         }
 
