@@ -8,8 +8,8 @@ namespace AirlinesTestingApp.Tests
     [TestClass]
     public class CheckFromValidationTest 
     {
-        private HomePage homePage;
-        private readonly List<string> errorsMessageList = new List<string>
+        private HomePage _homePage;
+        private readonly List<string> _errorsMessageList = new List<string>
         {
             "Veuillez sélectionner une date de départ",
             "Veuillez sélectionner une date retour",
@@ -20,33 +20,34 @@ namespace AirlinesTestingApp.Tests
         [TestMethod]
         public void CheckFormValidation()
         {
-            _1_OpenHomePage();
-            
+            OpenHomePage();
+         
+            Thread.Sleep(10000);
 
-            _2_SubmitBookingForm();
+            SubmitBookingForm();
 
-            _3_AssertErrorsVisible();
+            AssertErrorsVisible();
         }
 
-        private void _1_OpenHomePage()
+        private void OpenHomePage()
         {
-            homePage = new HomePage();
-            homePage.OpenHomePage();
-            homePage.CloseAds();
+            _homePage = new HomePage();
+            _homePage.OpenHomePage();
+            _homePage.CloseAds();
         }
 
-        private void _2_SubmitBookingForm()
+        private void SubmitBookingForm()
         {
-            homePage.SubmitBookingForm();
+            _homePage.SubmitBookingForm();
         }
 
-        private void _3_AssertErrorsVisible()
+        private void AssertErrorsVisible()
         {
-            var errorsListElements = homePage.GetErrorsElements();
+            var errorsListElements = _homePage.GetErrorsElements();
             int i = 0;
             foreach (var errorsListElement in errorsListElements)
             {
-                Assert.AreEqual(errorsMessageList[i], errorsListElement.Text);
+                Assert.AreEqual(_errorsMessageList[i], errorsListElement.Text);
                 i++;
             }
         }

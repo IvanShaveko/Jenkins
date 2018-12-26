@@ -9,20 +9,9 @@ namespace AirlinesTestingApp.Pages
 {
     public class HomePage
     {
-        private IWebDriver driver;
+        private readonly IWebDriver _driver;
         private const string Url = "https://www.aircaraibes.com/";
-        By advertisementCross = By.ClassName("optanon-alert-box-close");
-        By oneWayTicketCheckbox = By.Id("departure-only");
-        By leavingTicketDate = By.Id("edit-b-date-1-booking-0");
-        By returnTicketDate = By.Id("edit-b-date-2-booking-0");
-        By returnTicketProximity = By.Id("uniform-edit-date-range-value-2");
-        By departure = By.Id("edit-b-location-1");
-        By arrival = By.Id("edit-b-location-2");
-        By bookingFormSubmitButton = By.CssSelector("#edit-submit-booking-home");
-        By dateClosingCross = By.ClassName("ui-datepicker__close");
-        By notificationCross = By.ClassName("acc--closeLink");
-        By errorsMessages = By.ClassName("messages");
-        List<By> errorsXPaths = new List<By>()
+        private readonly List<By> _errorsXPaths = new List<By>()
         {
             By.XPath("//*[@id='ac-com-booking-amadeus-booking-homepage']/div[2]/ul/li[1]"),
             By.XPath("//*[@id='ac-com-booking-amadeus-booking-homepage']/div[2]/ul/li[2]"),
@@ -30,26 +19,26 @@ namespace AirlinesTestingApp.Pages
             By.XPath("//*[@id='ac-com-booking-amadeus-booking-homepage']/div[2]/ul/li[4]")
         };
 
+        public HomePage()
+        {
+            _driver = Driver.GetDriverInstance();
+        }
+
         private void SelectDeparture()
         {
-            var placeToLeave = new SelectElement(driver.FindElement(departure));
-            placeToLeave.SelectByIndex(1);//Because "zero" value is default
+            var placeToLeave = new SelectElement(_driver.FindElement(By.Id("edit-b-location-1")));
+            placeToLeave.SelectByIndex(1);
         }
 
         private void ChooseValueOfSelectTag(By selector, int index)
         {
-            var selectElement = new SelectElement(driver.FindElement(selector));
-            selectElement.SelectByIndex(index);//Because "zero" value is default
+            var selectElement = new SelectElement(_driver.FindElement(selector));
+            selectElement.SelectByIndex(index);
         }
 
         private void CloseDatePicker()
         {
-            driver.FindElement(dateClosingCross).Click();
-        }
-
-        public HomePage()
-        {
-            this.driver = Driver.GetDriverInstance();
+            _driver.FindElement(By.ClassName("ui-datepicker__close")).Click();
         }   
 
         public void OpenHomePage()
@@ -59,54 +48,54 @@ namespace AirlinesTestingApp.Pages
 
         public void GoToUrl(string url)
         {
-            driver.Navigate().GoToUrl(url);
+            _driver.Navigate().GoToUrl(url);
         }
 
         public void CloseAds()
         {
-            driver.FindElement(advertisementCross).Click();
+            _driver.FindElement(By.ClassName("optanon-alert-box-close")).Click();
             Thread.Sleep(1000);
         }
 
         public void SelectOneWayTicket()
         {
-            driver.FindElement(oneWayTicketCheckbox).Click();
+            _driver.FindElement(By.Id("departure-only")).Click();
         }
 
         public IWebElement GetReturnTicketDate()
         {
-            return driver.FindElement(returnTicketDate);
+            return _driver.FindElement(By.Id("edit-b-date-2-booking-0"));
         }
 
         public IWebElement GetLeavingTicketDate()
         {
-            return driver.FindElement(leavingTicketDate);
+            return _driver.FindElement(By.Id("edit-b-date-1-booking-0"));
         }
 
         public IWebElement GetReturnTicketProximity()
         {
-            return driver.FindElement(returnTicketProximity);
+            return _driver.FindElement(By.Id("uniform-edit-date-range-value-2"));
         }
 
         public void FillInBookingForm()
         {
-            ChooseValueOfSelectTag(departure, 1);
-            ChooseValueOfSelectTag(arrival, 12);
+            ChooseValueOfSelectTag(By.Id("edit-b-location-1"), 1);
+            ChooseValueOfSelectTag(By.Id("edit-b-location-2"), 12);
 
-            SetDateTime(driver.FindElement(leavingTicketDate), DateTime.Now.ToString("dd'/'MM'/'yyyy"));
+            SetDateTime(_driver.FindElement(By.Id("edit-b-date-1-booking-0")), DateTime.Now.ToString("dd'/'MM'/'yyyy"));
             SetDateTime(GetReturnTicketDate(), DateTime.Now.ToString("dd'/'MM'/'yyyy"));
         }
 
         public IWebElement SetDepartureAndReturnElement()
         {
-            var selectElement = new SelectElement(driver.FindElement(departure));
-            selectElement.SelectByIndex(1);//Because "zero" value is default
+            var selectElement = new SelectElement(_driver.FindElement(By.Id("edit-b-location-1")));
+            selectElement.SelectByIndex(1);
             return selectElement.SelectedOption;
         }
 
         public SelectElement GetArrivalAirportOptions()
         {
-            return new SelectElement(driver.FindElement(arrival));
+            return new SelectElement(_driver.FindElement(By.Id("edit-b-location-2")));
         }
 
         public void SetDateTime(IWebElement el, string value)
@@ -117,25 +106,25 @@ namespace AirlinesTestingApp.Pages
 
         public IWebElement GetElement(By selector)
         {
-            return driver.FindElement(selector);
+            return _driver.FindElement(selector);
         }
 
         public void SubmitBookingForm()
         {
-            driver.FindElement(bookingFormSubmitButton).Click();
+            _driver.FindElement(By.CssSelector("#edit-submit-booking-home")).Click();
         }
 
         public IWebElement GetErrorMessages()
         {
-            return driver.FindElement(errorsMessages);
+            return _driver.FindElement(By.ClassName("messages"));
         }
 
         public List<IWebElement> GetErrorsElements()
         {
             List<IWebElement> resultElements = new List<IWebElement>();
-            foreach (var errorsXPath in errorsXPaths)
+            foreach (var errorsXPath in _errorsXPaths)
             {
-                resultElements.Add(driver.FindElement(errorsXPath));
+                resultElements.Add(_driver.FindElement(errorsXPath));
             }
             return resultElements;
         }

@@ -7,7 +7,7 @@ namespace AirlinesTestingApp
     [TestClass]
     public class ArrivalDateValidationTest 
     {
-        private HomePage homePage;
+        private HomePage _homePage;
         private const string ErrorMessage = "MESSAGE D'ERREUR\r\nVous devez choisir une date " +
             "/ heure de départ, comprise entre ^DATA(START_RANGE_NUM), à partir de maintenant" +
             ", et ^DATA(END_RANGE_NUM).";
@@ -15,33 +15,33 @@ namespace AirlinesTestingApp
         [TestMethod]
         public void CheckArrivalDateGreaterOrEqualLeavingDate()
         {
-            _1_OpenHomePage();
+            OpenHomePage();
 
             Thread.Sleep(5000);
             
-            _2_FillInBookingFormSetIncorrectArrivalDateAndSubmit();
+            FillInBookingFormSetIncorrectArrivalDateAndSubmit();
 
-            _3_AssertErrorsVisible();
+            AssertErrorsVisible();
         }
 
-        private void _1_OpenHomePage()
+        private void OpenHomePage()
         {
-            homePage = new HomePage();
-            homePage.OpenHomePage();
-            homePage.CloseAds();
+            _homePage = new HomePage();
+            _homePage.OpenHomePage();
+            _homePage.CloseAds();
         }
 
-        private void _2_FillInBookingFormSetIncorrectArrivalDateAndSubmit()
+        private void FillInBookingFormSetIncorrectArrivalDateAndSubmit()
         {
-            homePage.FillInBookingForm();
-            homePage.GetLeavingTicketDate().Clear();
-            homePage.SetDateTime(homePage.GetLeavingTicketDate(), "11/11/2011");
-            homePage.SubmitBookingForm();
+            _homePage.FillInBookingForm();
+            _homePage.GetLeavingTicketDate().Clear();
+            _homePage.SetDateTime(_homePage.GetLeavingTicketDate(), "11/11/2011");
+            _homePage.SubmitBookingForm();
         }
 
-        private void _3_AssertErrorsVisible()
+        private void AssertErrorsVisible()
         {
-            var messageText = homePage.GetErrorMessages().Text;
+            var messageText = _homePage.GetErrorMessages().Text;
             Assert.AreEqual(ErrorMessage, messageText);
         }
     }

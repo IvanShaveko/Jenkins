@@ -10,38 +10,38 @@ namespace AirlinesTestingApp.Tests
     [TestClass]
     public class DifferentDestinationAndSourceTest
     {
-        private HomePage homePage;
-        private SelectElement arrivalAirports;
-        private IWebElement departureAirport;
+        private HomePage _homePage;
+        private SelectElement _arrivalAirports;
+        private IWebElement _departureAirport;
 
         [TestMethod]
         public void CheckDifferentSourceAndDestination()
         {
-            _1_OpenHomePage();
+            OpenHomePage();
 
-            Thread.Sleep(5000);
+            Thread.Sleep(10000);
 
-            _2_SetSourceAirport();
+            SetSourceAirport();
 
-            _3_AssertNoSourceAirportInDestinationDropdown();
+            AssertNoSourceAirportInDestinationDropdown();
         }
 
-        private void _1_OpenHomePage()
+        private void OpenHomePage()
         {
-            homePage = new HomePage();
-            homePage.OpenHomePage();
+            _homePage = new HomePage();
+            _homePage.OpenHomePage();
         }
 
-        private void _2_SetSourceAirport()
+        private void SetSourceAirport()
         {
-            departureAirport = homePage.SetDepartureAndReturnElement();
-            arrivalAirports = homePage.GetArrivalAirportOptions();
+            _departureAirport = _homePage.SetDepartureAndReturnElement();
+            _arrivalAirports = _homePage.GetArrivalAirportOptions();
         }
 
-        private void _3_AssertNoSourceAirportInDestinationDropdown()
+        private void AssertNoSourceAirportInDestinationDropdown()
         {
-            var arrivalOptions = arrivalAirports.Options;
-            var existsDepartureValueInArrival = arrivalOptions.Any(i => i.Text.Equals(departureAirport.Text));
+            var arrivalOptions = _arrivalAirports.Options;
+            var existsDepartureValueInArrival = arrivalOptions.Any(i => i.Text.Equals(_departureAirport.Text));
             Assert.AreEqual(true, existsDepartureValueInArrival);
         }
     }

@@ -2,33 +2,33 @@
 using AirlinesTestingApp.Pages;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace AirlinesTestingApp
+namespace AirlinesTestingApp.Tests
 {
     [TestClass]
     public class OneWayTicketSelectingTest 
     {
-            private HomePage homePage;
+            private HomePage _homePage;
 
             [TestMethod]
             public void SelectOneWayTicketAndAssertReturningDateDisabled()
             {
+                OpenHomePageAndSelectOneWayTicket();
+
                 Thread.Sleep(5000);
 
-                _1_OpenHomePageAndSelectOneWayTicket();
-
-                _2_AssertDisabledFields();
+                AssertDisabledFields();
             }
 
-        private void _1_OpenHomePageAndSelectOneWayTicket()
+        private void OpenHomePageAndSelectOneWayTicket()
         {
             var homePage = new HomePage();
             homePage.OpenHomePage();
             homePage.CloseAds();
             homePage.SelectOneWayTicket();
-            this.homePage = homePage;
+            this._homePage = homePage;
         }
 
-        private void _2_AssertDisabledFields()
+        private void AssertDisabledFields()
         {
             AssertDateFieldDisabled();
             AssertProximityFieldDisabled();
@@ -36,13 +36,13 @@ namespace AirlinesTestingApp
 
         private void AssertDateFieldDisabled()
         {
-            var dateField = homePage.GetReturnTicketDate();
+            var dateField = _homePage.GetReturnTicketDate();
             Assert.AreEqual(false, dateField.Enabled);
         }
 
         private void AssertProximityFieldDisabled()
         {
-            var proximityField = homePage.GetReturnTicketProximity();
+            var proximityField = _homePage.GetReturnTicketProximity();
             var classNames = proximityField.GetAttribute("className");
             Assert.AreEqual(true, classNames.Contains("disabled"));
         }
