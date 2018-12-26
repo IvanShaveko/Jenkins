@@ -38,3 +38,6 @@ D:\Jenkins\AirlinesTestingApp\AirlinesTestingApp\obj\Debug\AirlinesTestingApp.cs
 D:\Jenkins\AirlinesTestingApp\AirlinesTestingApp\obj\Debug\AirlinesTestingApp.csproj.CopyComplete
 D:\Jenkins\AirlinesTestingApp\AirlinesTestingApp\obj\Debug\AirlinesTestingApp.dll
 D:\Jenkins\AirlinesTestingApp\AirlinesTestingApp\obj\Debug\AirlinesTestingApp.pdb
+D:\Jenkins\AirlinesTestingApp\AirlinesTestingApp\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.resources.dll
+D:\Jenkins\AirlinesTestingApp\AirlinesTestingApp\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.resources.dll
+D:\Jenkins\AirlinesTestingApp\AirlinesTestingApp\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll

@@ -43,12 +43,7 @@ namespace AirlinesTestingApp.Pages
 
         public void OpenHomePage()
         {
-            GoToUrl(Url);
-        }
-
-        public void GoToUrl(string url)
-        {
-            _driver.Navigate().GoToUrl(url);
+            _driver.Navigate().GoToUrl(Url);
         }
 
         public void CloseAds()
