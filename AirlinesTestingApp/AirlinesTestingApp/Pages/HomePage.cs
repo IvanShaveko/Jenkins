@@ -115,6 +115,7 @@ namespace AirlinesTestingApp.Pages
         {
             var loginEntry = _driver.FindElement(By.Id("login"));
             loginEntry.Click();
+            loginEntry.Clear();
             loginEntry.SendKeys(login);
         }
 

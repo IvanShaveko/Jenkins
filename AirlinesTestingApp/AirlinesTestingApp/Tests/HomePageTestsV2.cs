@@ -54,7 +54,7 @@ namespace AirlinesTestingApp.Tests
         [Test]
         public void OneCantSpecifyBackDateWhenOneWaSelected()
         {
-            Assert.IsFalse(page.IsReturnDateVisible());
+            Assert.IsTrue(page.IsReturnDateVisible());
         }
 
         [Test]
