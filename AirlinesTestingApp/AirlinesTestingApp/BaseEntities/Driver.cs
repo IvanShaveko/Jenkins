@@ -7,10 +7,7 @@ namespace AirlinesTestingApp.BaseEntities
     public class Driver
     {
         public static IWebDriver Instance { get; private set; }
-
-        /*private static readonly Lazy<MyChromeDriver> lazy =
-            new Lazy<MyChromeDriver>(() => new MyChromeDriver());
-           */
+        
         private Driver()
         {
 
@@ -28,9 +25,7 @@ namespace AirlinesTestingApp.BaseEntities
 
             return Instance;
         }
-
-        /*public static MyChromeDriver GetDriver() => lazy.Value;
-        */
+        
         public void Quit()
         {
             Instance.Quit();
