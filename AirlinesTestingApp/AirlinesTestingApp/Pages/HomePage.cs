@@ -3,125 +3,132 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace AirlinesTestingApp.Pages
 {
     public class HomePage
     {
+        private const string BASE_URL = "https://sales.orenairport.ru/oxygen/";
+        private readonly By viewBlock = By.ClassName("view-block");
+        private readonly By selectCity = By.XPath("//ul[@class='city-list']");
+
+
         private readonly IWebDriver _driver;
-        private const string Url = "https://www.aircaraibes.com/";
-        private readonly List<By> _errorsXPaths = new List<By>()
-        {
-            By.XPath("//*[@id='ac-com-booking-amadeus-booking-homepage']/div[2]/ul/li[1]"),
-            By.XPath("//*[@id='ac-com-booking-amadeus-booking-homepage']/div[2]/ul/li[2]"),
-            By.XPath("//*[@id='ac-com-booking-amadeus-booking-homepage']/div[2]/ul/li[3]"),
-            By.XPath("//*[@id='ac-com-booking-amadeus-booking-homepage']/div[2]/ul/li[4]")
-        };
 
-        public HomePage()
+        public HomePage(IWebDriver driver)
         {
-            _driver = Driver.GetDriverInstance();
+            _driver = driver;
         }
 
-        private void SelectDeparture()
+        public void Open()
         {
-            var placeToLeave = new SelectElement(_driver.FindElement(By.Id("edit-b-location-1")));
-            placeToLeave.SelectByIndex(1);
+            _driver.Navigate().GoToUrl(BASE_URL);
         }
 
-        private void ChooseValueOfSelectTag(By selector, int index)
+        public void InitFrom(string from)
         {
-            var selectElement = new SelectElement(_driver.FindElement(selector));
-            selectElement.SelectByIndex(index);
+            var inputFrom = _driver.FindElements(viewBlock).First();
+            var cityBlockFrom = _driver.FindElements(selectCity).First();
+
+            var input = _driver.FindElement(By.Id("originCityName_0"));
+            inputFrom.Click();
+            input.SendKeys(from);
+
+            if (cityBlockFrom.Displayed)
+                cityBlockFrom.FindElement(By.TagName("li")).Click();
         }
 
-        private void CloseDatePicker()
+        public void InitTo(string to)
         {
-            _driver.FindElement(By.ClassName("ui-datepicker__close")).Click();
-        }   
+            var inputTo = _driver.FindElements(viewBlock).Last();
+            var cityBlockTo = _driver.FindElements(selectCity).Last();
 
-        public void OpenHomePage()
-        {
-            _driver.Navigate().GoToUrl(Url);
+            var input = _driver.FindElement(By.Id("destinationCityName_0"));
+            inputTo.Click();
+            input.SendKeys(to);
+
+            if (cityBlockTo.Displayed)
+                cityBlockTo.FindElement(By.TagName("li")).Click();
         }
 
-        public void CloseAds()
+        public void ClickOneWay()
         {
-            _driver.FindElement(By.ClassName("optanon-alert-box-close")).Click();
-            Thread.Sleep(1000);
+            var oneWayLabel = _driver.FindElement(By.XPath("//label[@for='isOneWay']"));
+            oneWayLabel.Click();
         }
 
-        public void SelectOneWayTicket()
+        public bool IsReturnDateVisible()
         {
-            _driver.FindElement(By.Id("departure-only")).Click();
+            var backDateInput = _driver.FindElement(By.Id("backDate_0"));
+            return backDateInput.Displayed;
         }
 
-        public IWebElement GetReturnTicketDate()
+        public bool ResultsFound()
         {
-            return _driver.FindElement(By.Id("edit-b-date-2-booking-0"));
-        }
+            var searchButton = _driver.FindElement(By.Id("searchButton"));
+            searchButton.Click();
 
-        public IWebElement GetLeavingTicketDate()
-        {
-            return _driver.FindElement(By.Id("edit-b-date-1-booking-0"));
-        }
 
-        public IWebElement GetReturnTicketProximity()
-        {
-            return _driver.FindElement(By.Id("uniform-edit-date-range-value-2"));
-        }
-
-        public void FillInBookingForm()
-        {
-            ChooseValueOfSelectTag(By.Id("edit-b-location-1"), 1);
-            ChooseValueOfSelectTag(By.Id("edit-b-location-2"), 12);
-
-            SetDateTime(_driver.FindElement(By.Id("edit-b-date-1-booking-0")), DateTime.Now.ToString("dd'/'MM'/'yyyy"));
-            SetDateTime(GetReturnTicketDate(), DateTime.Now.ToString("dd'/'MM'/'yyyy"));
-        }
-
-        public IWebElement SetDepartureAndReturnElement()
-        {
-            var selectElement = new SelectElement(_driver.FindElement(By.Id("edit-b-location-1")));
-            selectElement.SelectByIndex(1);
-            return selectElement.SelectedOption;
-        }
-
-        public SelectElement GetArrivalAirportOptions()
-        {
-            return new SelectElement(_driver.FindElement(By.Id("edit-b-location-2")));
-        }
-
-        public void SetDateTime(IWebElement el, string value)
-        {
-            el.SendKeys(value);
-            CloseDatePicker();
-        }
-
-        public IWebElement GetElement(By selector)
-        {
-            return _driver.FindElement(selector);
-        }
-
-        public void SubmitBookingForm()
-        {
-            _driver.FindElement(By.CssSelector("#edit-submit-booking-home")).Click();
-        }
-
-        public IWebElement GetErrorMessages()
-        {
-            return _driver.FindElement(By.ClassName("messages"));
-        }
-
-        public List<IWebElement> GetErrorsElements()
-        {
-            List<IWebElement> resultElements = new List<IWebElement>();
-            foreach (var errorsXPath in _errorsXPaths)
+            try
             {
-                resultElements.Add(_driver.FindElement(errorsXPath));
+                var foundBlock = _driver.FindElement(By.Id("search-filter-info"));
+                return foundBlock.Displayed;
             }
-            return resultElements;
+            catch (Exception)
+            {
+                try
+                {
+                    var pageWarningBlock = _driver.FindElement(By.XPath("//div[@class='alert alert-warning page-warning']"));
+                    return !pageWarningBlock.Displayed;
+                }
+                catch (Exception)
+                {
+                    var pageDangerBlock = _driver.FindElement(By.XPath("//div[@class='alert alert-danger page-error']"));
+                    return !pageDangerBlock.Displayed;
+                }
+            }
         }
+
+        public void ClickLoginButton()
+        {
+            try
+            {
+                var loginButton = _driver.FindElement(By.Id("showLoginBtn"));
+                loginButton.Click();
+            }
+            catch (Exception)
+            {
+                var loginButton = _driver.FindElement(By.Id("loginBtn"));
+                loginButton.Click();
+            }
+        }
+
+        public void ClickLogoutButton()
+        {
+            var logoutButton = _driver.FindElement(By.Id("logoutBtn"));
+            logoutButton.Click();
+        }
+
+        public void EnterLogin(string login)
+        {
+            var loginEntry = _driver.FindElement(By.Id("login"));
+            loginEntry.Click();
+            loginEntry.SendKeys(login);
+        }
+
+        public void EnterPassword(string password)
+        {
+            var passEntry = _driver.FindElement(By.Id("password"));
+            passEntry.Click();
+            passEntry.SendKeys(password);
+        }
+
+        public string UserName => _driver.FindElement(By.Id("userName")).Text;
+
+        public bool Authorized => _driver.FindElement(By.Id("authorise")).Displayed;
+
+        public void Quit() => _driver.Quit();
     }
 }   

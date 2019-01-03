@@ -6,28 +6,35 @@ namespace AirlinesTestingApp.BaseEntities
 {
     public class Driver
     {
-        private static IWebDriver driver;
+        public static IWebDriver Instance { get; private set; }
 
+        /*private static readonly Lazy<MyChromeDriver> lazy =
+            new Lazy<MyChromeDriver>(() => new MyChromeDriver());
+           */
         private Driver()
         {
-            driver = new ChromeDriver();
-            driver.Manage().Window.Maximize();
+
+            Instance = new ChromeDriver();
+            Instance.Manage().Window.Maximize();
+            Instance.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
         }
 
-        public static IWebDriver GetDriverInstance()
+        public static IWebDriver GetDriver()
         {
-            if(driver == null)
+            if (Instance == null)
             {
                 new Driver();
             }
 
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(15);
-            return driver;
+            return Instance;
         }
 
-        public static void QuitDriver()
+        /*public static MyChromeDriver GetDriver() => lazy.Value;
+        */
+        public void Quit()
         {
-            driver.Quit();
+            Instance.Quit();
+            Instance = null;
         }
     }
 }
